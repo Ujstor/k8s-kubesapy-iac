@@ -1,0 +1,59 @@
+all:
+  hosts:
+    c1:
+      ansible_host: 188.245.205.162
+      etcd_member_name: c1
+    c2:
+      ansible_host: 135.181.41.246 
+      etcd_member_name: c2
+    c3:
+      ansible_host: 188.245.205.133
+      etcd_member_name: c3
+    n1:
+      ansible_host: 65.21.5.16
+      etcd_member_name: n1
+    n2:
+      ansible_host: 23.88.42.69
+      etcd_member_name: n2
+    n3:
+      ansible_host: 78.47.239.33
+      etcd_member_name: n3
+
+  children:
+    kube_control_plane:
+      hosts:
+        c1:
+        c2:
+        c3:
+    etcd:
+      hosts:
+        c1:
+        c2:
+        c3:
+    virtual_nodes:
+      hosts:
+        n1:
+        n2:
+        n3:
+      vars:
+        node_labels:
+          rook-storage-node: "true"
+    k8s_cluster:
+      children:
+        kube_control_plane:
+        virtual_nodes:
+      vars:
+        kube_vip_enabled: true
+        kube_proxy_strict_arp: true
+        kube_vip_controlplane_enabled: true
+        kube_vip_address: 95.217.172.169
+        apiserver_loadbalancer_domain_name: api.k8s.ujstor.com
+        loadbalancer_apiserver:
+          address: "{{ kube_vip_address }}"
+          port: 6443
+        kube_vip_services_enabled: false
+        kube_vip_arp_enabled: true
+        kube_vip_lb_enable: true
+        kube_network_plugin: cni
+        container_manager: containerd
+        metrics_server_enabled: true
