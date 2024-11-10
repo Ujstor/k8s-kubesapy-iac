@@ -86,6 +86,8 @@ module "servers" {
     }
   }
 
+  os_type = "ubuntu-22.04"
+
   hcloud_ssh_key_id = [module.ssh_key_k8s.hcloud_ssh_key_id]
 
   use_network = true
@@ -93,29 +95,29 @@ module "servers" {
   depends_on = [module.ssh_key_k8s]
 }
 
-module "volumes" {
-  source = "github.com/Ujstor/terraform-hetzner-modules//modules/volumes?ref=v0.0.6"
-
-  volume_config = {
-    volume-1 = {
-      size      = 250
-      location  = module.servers.server_info.n1.location
-      server_id = module.servers.server_info.n1.id
-    }
-    volume-2 = {
-      size      = 250
-      location  = module.servers.server_info.n2.location
-      server_id = module.servers.server_info.n2.id
-    }
-    volume-3 = {
-      size      = 250
-      location  = module.servers.server_info.n3.location
-      server_id = module.servers.server_info.n3.id
-    }
-  }
-
-  depends_on = [module.servers]
-}
+# module "volumes" {
+#   source = "github.com/Ujstor/terraform-hetzner-modules//modules/volumes?ref=v0.0.6"
+#
+#   volume_config = {
+#     volume-1 = {
+#       size      = 250
+#       location  = module.servers.server_info.n1.location
+#       server_id = module.servers.server_info.n1.id
+#     }
+#     volume-2 = {
+#       size      = 250
+#       location  = module.servers.server_info.n2.location
+#       server_id = module.servers.server_info.n2.id
+#     }
+#     volume-3 = {
+#       size      = 250
+#       location  = module.servers.server_info.n3.location
+#       server_id = module.servers.server_info.n3.id
+#     }
+#   }
+#
+#   depends_on = [module.servers]
+# }
 
 module "cloudflare_record" {
   source = "github.com/Ujstor/terraform-hetzner-modules//modules/network/cloudflare_record?ref=v0.0.6"

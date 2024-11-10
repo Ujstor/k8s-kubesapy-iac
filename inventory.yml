@@ -35,16 +35,19 @@ all:
         n1:
         n2:
         n3:
+    kube_node:
+      children:
+        virtual_nodes:
     k8s_cluster:
       children:
         kube_control_plane:
-        virtual_nodes:
+        kube_node:
       vars:
         kube_version: v1.31.1
         kube_vip_enabled: true
         kube_proxy_strict_arp: true
         kube_vip_controlplane_enabled: true
-        kube_vip_address: 141.132.247.179 #Lb ip
+        kube_vip_address: 95.217.172.169 #Lb ip
         apiserver_loadbalancer_domain_name: api.k8s0.ujstor.com
         loadbalancer_apiserver:
           address: "{{ kube_vip_address }}"
