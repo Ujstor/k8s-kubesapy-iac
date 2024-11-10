@@ -7,7 +7,7 @@ all:
       ansible_host: c2.k8s0.ujstor.com
       etcd_member_name: c2
     c3:
-      ansible_host: c2.k8s0.ujstor.com
+      ansible_host: c3.k8s0.ujstor.com
       etcd_member_name: c3
     n1:
       ansible_host: n1.k8s0.ujstor.com
@@ -16,7 +16,7 @@ all:
       ansible_host: n2.k8s0.ujstor.com
       etcd_member_name: n2
     n3:
-      ansible_host: n2.k8s0.ujstor.com
+      ansible_host: n3.k8s0.ujstor.com
       etcd_member_name: n3
 
   children:

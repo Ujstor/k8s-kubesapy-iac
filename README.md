@@ -1,4 +1,4 @@
-# K8S Cluster in Hetzner Cloud with terraform and ansible [Kubespray]
+# K8S Cluster in Hetzner Cloud with terraform and ansible [Kubespray](https://kubespray.io/)
 
 Deploy a k8s cluster in Hetzner Cloud using terraform and ansible.
 
@@ -17,7 +17,7 @@ terraform apply
 docker build -t ansible-k8s-kubespray ./ansible
 
 docker run --rm -it \
--v inventory.yml:/ansible/inventory.yml \
+-v ./inventory.yml:/ansible/inventory.yml \
 -v ./hetzner_infra/.ssh/k8s_hetzner_key:/secrets/ssh_key \
 -v ./hetzner_infra/.ssh/k8s_hetzner_key.pub:/secrets/ssh_key.pub \
 ansible-k8s-kubespray
