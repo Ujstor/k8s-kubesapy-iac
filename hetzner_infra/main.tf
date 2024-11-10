@@ -9,7 +9,7 @@ module "servers" {
   source = "github.com/Ujstor/terraform-hetzner-modules//modules/server?ref=v0.0.6"
 
   server_config = {
-    server-1 = {
+    c1 = {
       location    = "fsn1"
       server_type = "cx22"
       labels = {
@@ -21,7 +21,7 @@ module "servers" {
       subnet_id    = module.vpc_subnets.subnet_id.subnet-1.subnet_id
       subnet_ip    = "10.0.1.1"
     }
-    server-2 = {
+    c2 = {
       location    = "hel1"
       server_type = "cx22"
       labels = {
@@ -33,7 +33,7 @@ module "servers" {
       subnet_id    = module.vpc_subnets.subnet_id.subnet-1.subnet_id
       subnet_ip    = "10.0.1.2"
     }
-    server-3 = {
+    c3 = {
       location    = "nbg1"
       server_type = "cx22"
       labels = {
@@ -45,7 +45,7 @@ module "servers" {
       subnet_id    = module.vpc_subnets.subnet_id.subnet-1.subnet_id
       subnet_ip    = "10.0.1.3"
     }
-    server-4 = {
+    n1 = {
       location    = "hel1"
       server_type = "cx32"
       labels = {
@@ -58,7 +58,7 @@ module "servers" {
       subnet_id    = module.vpc_subnets.subnet_id.subnet-2.subnet_id
       subnet_ip    = "10.0.2.1"
     }
-    server-5 = {
+    n2 = {
       location    = "fsn1"
       server_type = "cx32"
       labels = {
@@ -71,7 +71,7 @@ module "servers" {
       subnet_id    = module.vpc_subnets.subnet_id.subnet-2.subnet_id
       subnet_ip    = "10.0.2.2"
     }
-    server-6 = {
+    n3 = {
       location    = "nbg1"
       server_type = "cx32"
       labels = {
@@ -93,6 +93,30 @@ module "servers" {
   depends_on = [module.ssh_key_k8s]
 }
 
+module "volumes" {
+  source = "github.com/Ujstor/terraform-hetzner-modules//modules/volumes?ref=v0.0.6"
+
+  volume_config = {
+    volume-1 = {
+      size      = 250
+      location  = module.servers.server_info.n1.location
+      server_id = module.servers.server_info.n1.id
+    }
+    volume-2 = {
+      size      = 250
+      location  = module.servers.server_info.n2.location
+      server_id = module.servers.server_info.n2.id
+    }
+    volume-3 = {
+      size      = 250
+      location  = module.servers.server_info.n3.location
+      server_id = module.servers.server_info.n3.id
+    }
+  }
+
+  depends_on = [module.servers]
+}
+
 module "cloudflare_record" {
   source = "github.com/Ujstor/terraform-hetzner-modules//modules/network/cloudflare_record?ref=v0.0.6"
 
@@ -108,7 +132,7 @@ module "cloudflare_record" {
     c1 = {
       zone_id = var.cloudflare_zone_id
       name    = "c1.k8s0"
-      content = module.servers.server_info.server-1.ip
+      content = module.servers.server_info.c1.ip
       type    = "A"
       ttl     = 3600
       proxied = false
@@ -116,7 +140,7 @@ module "cloudflare_record" {
     c2 = {
       zone_id = var.cloudflare_zone_id
       name    = "c2.k8s0"
-      content = module.servers.server_info.server-2.ip
+      content = module.servers.server_info.c2.ip
       type    = "A"
       ttl     = 3600
       proxied = false
@@ -124,7 +148,7 @@ module "cloudflare_record" {
     c3 = {
       zone_id = var.cloudflare_zone_id
       name    = "c3.k8s0"
-      content = module.servers.server_info.server-3.ip
+      content = module.servers.server_info.c3.ip
       type    = "A"
       ttl     = 3600
       proxied = false
@@ -132,7 +156,7 @@ module "cloudflare_record" {
     n1 = {
       zone_id = var.cloudflare_zone_id
       name    = "n1.k8s0"
-      content = module.servers.server_info.server-4.ip
+      content = module.servers.server_info.n1.ip
       type    = "A"
       ttl     = 3600
       proxied = false
@@ -140,7 +164,7 @@ module "cloudflare_record" {
     n2 = {
       zone_id = var.cloudflare_zone_id
       name    = "n2.k8s0"
-      content = module.servers.server_info.server-5.ip
+      content = module.servers.server_info.n2.ip
       type    = "A"
       ttl     = 3600
       proxied = false
@@ -148,7 +172,7 @@ module "cloudflare_record" {
     n3 = {
       zone_id = var.cloudflare_zone_id
       name    = "n3.k8s0"
-      content = module.servers.server_info.server-6.ip
+      content = module.servers.server_info.n3.ip
       type    = "A"
       ttl     = 3600
       proxied = false

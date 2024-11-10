@@ -17,10 +17,10 @@ terraform apply
 docker build -t ansible-k8s-kubespray ./ansible
 
 docker run --rm -it \
--v ./inventory.yml:/ansible/inventory.yml \
--v ./hetzner_infra/.ssh/k8s_hetzner_key:/secrets/ssh_key \
--v ./hetzner_infra/.ssh/k8s_hetzner_key.pub:/secrets/ssh_key.pub \
-ansible-k8s-kubespray
+    -v $(pwd)/inventory.yml:/config/inventory.yml \
+    -v $(pwd)/hetzner_infra/.ssh/k8s_hetzner_key:/secrets/ssh_key \
+    -v $(pwd)/hetzner_infra/.ssh/k8s_hetzner_key.pub:/secrets/ssh_key.pub \
+    ansible-k8s-kubespray
 
 ansible-playbook playbook_k8s_deploy.yml
 

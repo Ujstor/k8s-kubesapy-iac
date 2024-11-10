@@ -44,7 +44,7 @@ all:
         kube_vip_enabled: true
         kube_proxy_strict_arp: true
         kube_vip_controlplane_enabled: true
-        kube_vip_address: 95.217.172.169
+        kube_vip_address: 141.132.247.179 #Lb ip
         apiserver_loadbalancer_domain_name: api.k8s0.ujstor.com
         loadbalancer_apiserver:
           address: "{{ kube_vip_address }}"
