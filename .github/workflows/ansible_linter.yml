@@ -15,6 +15,7 @@ jobs:
         run: |
           pip3 install ansible
           pip3 install ansible-lint
+          pip3 install distlib
 
       - name: Install Ansible Collection
         run: |
