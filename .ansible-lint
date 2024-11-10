@@ -5,3 +5,4 @@ skip_list:
   - yaml[brackets]
   - var-naming[no-role-prefix]
   - yaml[line-length]
+  - yaml[empty-lines]

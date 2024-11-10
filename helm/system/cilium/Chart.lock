@@ -1,0 +1,6 @@
+dependencies:
+- name: cilium
+  repository: https://Ujstor.github.io/helm-charts-system
+  version: 1.0.0
+digest: sha256:0945e23cda0f028770f7f1daa96fcccab472954e37a90caa3da5435e7056da33
+generated: "2024-11-08T23:44:51.392395439+01:00"

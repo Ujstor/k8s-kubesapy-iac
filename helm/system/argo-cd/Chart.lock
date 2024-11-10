@@ -1,0 +1,6 @@
+dependencies:
+- name: argo-cd
+  repository: https://Ujstor.github.io/helm-charts-system
+  version: 1.0.0
+digest: sha256:b416f3709e24cf1d57dd6d5023231176bb8c9f56302954a435cc4b7dc5cbb3ca
+generated: "2024-11-08T23:42:33.650742605+01:00"

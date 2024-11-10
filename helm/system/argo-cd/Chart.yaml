@@ -1,0 +1,14 @@
+apiVersion: v2
+name: argo-cd
+description: A argo-cd Helm chart config by Ujstor
+type: application
+version: 1.0.0
+appVersion: "v2.13.0"
+
+dependencies:
+- name: argo-cd
+  version: 1.0.0
+  repository: "@ujstor-k8s-system"
+  alias: argocd-k3s
+
+

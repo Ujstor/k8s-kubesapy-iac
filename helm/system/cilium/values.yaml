@@ -1,0 +1,5 @@
+cilium-k8s:
+  cilium:
+    k8sServiceHost: api.k8s0.ujstor.com
+    encryption:
+      enabled: false

@@ -1,12 +1,12 @@
 module "ssh_key_k8s" {
-  source = "github.com/Ujstor/terraform-hetzner-modules//modules/ssh_key?ref=v0.0.4"
+  source = "github.com/Ujstor/terraform-hetzner-modules//modules/ssh_key?ref=v0.0.6"
 
   ssh_key_name = "k8s_hetzner_key"
   ssh_key_path = ".ssh" #create dir before appling tf config if you use custom paths for ssh keys
 }
 
 module "servers" {
-  source = "github.com/Ujstor/terraform-hetzner-modules//modules/server?ref=v0.0.4"
+  source = "github.com/Ujstor/terraform-hetzner-modules//modules/server?ref=v0.0.6"
 
   server_config = {
     server-1 = {
@@ -34,7 +34,7 @@ module "servers" {
       subnet_ip    = "10.0.1.2"
     }
     server-3 = {
-      location    = "fsn1"
+      location    = "nbg1"
       server_type = "cx22"
       labels = {
         control_plane : "true"
@@ -94,12 +94,68 @@ module "servers" {
 }
 
 module "cloudflare_record" {
-  source = "github.com/Ujstor/terraform-hetzner-modules//modules/network/cloudflare_record?ref=v0.0.4"
+  source = "github.com/Ujstor/terraform-hetzner-modules//modules/network/cloudflare_record?ref=v0.0.6"
 
   cloudflare_record = {
     kube_api = {
       zone_id = var.cloudflare_zone_id
-      name    = "api.k8s"
+      name    = "api.k8s0"
+      content = module.load_balancer.lb_status.k8s-api.lb_ip
+      type    = "A"
+      ttl     = 3600
+      proxied = false
+    }
+    c1 = {
+      zone_id = var.cloudflare_zone_id
+      name    = "c1.k8s0"
+      content = module.servers.server_info.server-1.ip
+      type    = "A"
+      ttl     = 3600
+      proxied = false
+    }
+    c2 = {
+      zone_id = var.cloudflare_zone_id
+      name    = "c2.k8s0"
+      content = module.servers.server_info.server-2.ip
+      type    = "A"
+      ttl     = 3600
+      proxied = false
+    }
+    c3 = {
+      zone_id = var.cloudflare_zone_id
+      name    = "c3.k8s0"
+      content = module.servers.server_info.server-3.ip
+      type    = "A"
+      ttl     = 3600
+      proxied = false
+    }
+    n1 = {
+      zone_id = var.cloudflare_zone_id
+      name    = "n1.k8s0"
+      content = module.servers.server_info.server-4.ip
+      type    = "A"
+      ttl     = 3600
+      proxied = false
+    }
+    n2 = {
+      zone_id = var.cloudflare_zone_id
+      name    = "n2.k8s0"
+      content = module.servers.server_info.server-5.ip
+      type    = "A"
+      ttl     = 3600
+      proxied = false
+    }
+    n3 = {
+      zone_id = var.cloudflare_zone_id
+      name    = "n3.k8s0"
+      content = module.servers.server_info.server-6.ip
+      type    = "A"
+      ttl     = 3600
+      proxied = false
+    }
+    argo_cd = {
+      zone_id = var.cloudflare_zone_id
+      name    = "argocd.k8s0"
       content = module.load_balancer.lb_status.k8s-api.lb_ip
       type    = "A"
       ttl     = 3600
@@ -110,7 +166,7 @@ module "cloudflare_record" {
 }
 
 module "vpc_subnets" {
-  source = "github.com/Ujstor/terraform-hetzner-modules//modules/network/vpc_subnet?ref=v0.0.4"
+  source = "github.com/Ujstor/terraform-hetzner-modules//modules/network/vpc_subnet?ref=v0.0.6"
 
   vpc_config = {
     vpc_name     = "k8s-vpc"
@@ -131,19 +187,16 @@ module "vpc_subnets" {
 }
 
 module "load_balancer" {
-  source = "github.com/Ujstor/terraform-hetzner-modules//modules/network/loadbalancer?ref=v0.0.5"
+  source = "github.com/Ujstor/terraform-hetzner-modules//modules/network/loadbalancer?ref=v0.0.6"
   lb_config = {
     k8s-api = {
       name               = "k8s-api-lb"
       load_balancer_type = "lb11"
       network_zone       = module.vpc_subnets.subnet_id.subnet-1.network_zone
-      load_balancer_target = [
-        {
-          type           = "label_selector"
-          label_selector = "cluster"
-        }
-
-      ]
+      load_balancer_targets = {
+        type           = "label_selector"
+        label_selector = "cluster"
+      }
     }
   }
   depends_on = [module.vpc_subnets, module.servers]
