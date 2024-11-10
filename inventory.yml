@@ -40,6 +40,7 @@ all:
         kube_control_plane:
         virtual_nodes:
       vars:
+        kube_version: v1.31.1
         kube_vip_enabled: true
         kube_proxy_strict_arp: true
         kube_vip_controlplane_enabled: true
